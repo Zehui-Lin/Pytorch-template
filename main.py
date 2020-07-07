@@ -47,7 +47,7 @@ def main(args):
 
     # 损失以及优化器
     cost = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(net.parameters(), lr=args.lr)
+    optimizer = torch.optim.Adam(net.parameters(), lr=args.lr)
 
     # 训练结果记录
     train_loss_list, train_acc_list, val_loss_list, val_acc_list = [], [], [], []
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     parser.add_argument('--smoke_test', action='store_true', help="finish fast to test")
     parser.add_argument('--num_epoch', type=int, default=50)
     parser.add_argument('--batch_size', type=int, default=16)
-    parser.add_argument('--lr', type=float, default=1e-3)
+    parser.add_argument('--lr', type=float, default=3e-4)
     parser.add_argument('--num_model_to_save', type=int, default=5)
     args = parser.parse_args()
     assert args.name is not None
