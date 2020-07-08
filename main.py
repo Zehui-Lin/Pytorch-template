@@ -26,13 +26,14 @@ def main(args):
     check_dir(best_path)
     check_dir(output_path)
     check_dir(result_path)
+    # 保存parser设置
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
     fh = logging.FileHandler((os.path.join(result_path, 'Setting_Log.txt')), mode='w')
     logger.addHandler(fh)
     logger.info(args)
     # 加载数据
-    train_set = MySet(txt_path, mode="train", is_debug=args.smoke_test,)
+    train_set = MySet(txt_path, mode="train", is_debug=args.smoke_test)
     val_set = MySet(txt_path,  mode="val", is_debug=args.smoke_test)
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
                               num_workers=20 if not args.smoke_test else 0)
