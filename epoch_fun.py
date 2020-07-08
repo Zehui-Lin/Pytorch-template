@@ -41,7 +41,7 @@ def val(net, loader, cost):
         loss_meter.update(loss.item())
         predict = y.data.cpu().numpy()
         label = label.data.cpu().numpy()
-        predicts.extend(lnp.argmax(predict, axis=1))
+        predicts.extend(np.argmax(predict, axis=1))
         labels.extend(label)
     acc = accuracy_score(labels, predicts)
     return loss_meter.avg, acc
