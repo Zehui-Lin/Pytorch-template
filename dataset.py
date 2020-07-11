@@ -9,7 +9,7 @@ import os
 class MySet(Dataset):
     def __init__(self, txt_path, mode="train", is_debug=False):
         self.mode = mode
-        self.data_list = read_list(self.mode, txt_path, image_path, is_debug)
+        self.data_list = read_list(self.mode, txt_path, is_debug)
 
     def __getitem__(self, item):
         data_item = self.data_list[item]
@@ -18,7 +18,7 @@ class MySet(Dataset):
 
         # 读图
         raw_data = cv2.imread(data_path)
-
+        # raw_data = cv2.resize(raw_data, (W, H))
         seq = iaa.Sequential([
             iaa.Fliplr(0.5),
             iaa.Crop(percent=(0, 0.1)),
@@ -35,9 +35,11 @@ class MySet(Dataset):
         seq_same = seq.to_deterministic()
 
         if self.mode == "train":
-            # cv2.imwrite('./...a/'+str(item)+'.png', raw_data)  # 保存原图
+            # cv2.imwrite('./data/original'+str(item)+'.png', raw_data)  # 保存原图
             processed_data = seq_same(image=raw_data)
-            # cv2.imwrite('./...b/'+str(item)+'.png', processed_data)  # 观察增强效果
+            # cv2.imwrite('./data/augmentation'+str(item)+'.png', processed_data)  # 观察增强效果
+        else:
+            processed_data = raw_data
 
         data = torch.from_numpy(processed_data.transpose((2, 0, 1)).astype(np.float32)/255)
 
@@ -56,6 +58,8 @@ def read_list(mode, txt_path, is_debug=False):
         txt_read_path = os.path.join(txt_path, "val.txt")
     elif mode == "test":
         txt_read_path = os.path.join(txt_path, "test.txt")
+    elif mode == "all":
+        txt_read_path = os.path.join(txt_path, "all.txt")
     else:
         raise ValueError
 
@@ -69,7 +73,7 @@ def read_list(mode, txt_path, is_debug=False):
     data_list = []
     for line in lines:
         line = line.strip()  # 去除末尾的换行符
-        data_path, label = line.split(" ")  # 指定空格键为分隔符
+        data_path, label = line.split(",")  # 指定空格键为分隔符
         image_info = {
             "...": data_path,
             "label": int(label)
