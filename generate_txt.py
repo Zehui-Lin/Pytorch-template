@@ -1,18 +1,5 @@
 import os
-import torch
-import argparse
-import numpy as np
 from utils import check_dir
-from dataset import ImageSet
-from network import Full_Share
-from network import Partial_Share
-from torch.utils.data import DataLoader
-import cv2
-import numpy as np
-import os
-from numpy import random as random
-from utils import check_dir
-from init import InitParser
 
 data_path = './'
 txtdir_path = './txt'
