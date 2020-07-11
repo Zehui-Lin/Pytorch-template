@@ -86,7 +86,6 @@ def main(args):
     best_weight = os.listdir(best_path)
     for i in range(args.num_model_to_save):
         # 模型
-        net = model().cuda()
         net.load_state_dict(torch.load(os.path.join(best_path, best_weight[i])))
         test_acc = test(net, test_loader)
         test_acc_list.append(test_acc)

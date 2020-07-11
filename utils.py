@@ -136,7 +136,7 @@ class savebest_weights():
             self.index = self.index[:self.num]
             self.acc = self.acc_array[self.index]
 
-            if acc > self.acc[-1]:  # 如果新的acc大于之前的最小值，则保存模型，同时删除acc最小的那个模型
+            if acc >= self.acc[-1]:  # 如果新的acc大于之前的最小值，则保存模型，同时删除acc最小的那个模型
                 self.remove(self.path_list[self.index[-1]])
                 del self.acc_list[self.index[-1]]
                 del self.path_list[self.index[-1]]

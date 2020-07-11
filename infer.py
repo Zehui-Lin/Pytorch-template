@@ -5,7 +5,7 @@ import os
 import torch
 import numpy as np
 from sklearn.metrics import accuracy_score
-from collections import Counter
+
 
 def test(net, loader):
     net.eval()
@@ -36,4 +36,3 @@ test_loader = DataLoader(test_set, batch_size=10, num_workers=20)
 # 测试
 test_acc = test(net, test_loader)
 print("The test acc:{}".format(test_acc))
-
