@@ -56,7 +56,6 @@ def main(args):
     # 训练结果记录
     train_loss_list, train_acc_list, val_loss_list, val_acc_list = [], [], [], []
     save = savebest_weights(args.num_model_to_save, best_path)
-    logtxt = open(log_path, "a")
     t0 = time.time()
     # epoch循环
     for epoch in range(args.num_epoch):
@@ -77,8 +76,10 @@ def main(args):
              x_label="epoch", y_label="acc", title="Acc Curve-epoch", save_path=result_path)
 
         info = [str(epoch).zfill(3), train_loss, val_acc]
+        logtxt = open(log_path, "a")
         logtxt.write("Epoch: {} | Train Loss: {:.4f} Val ACC: {:.4f}\n".format(*info))
         print("\rEpoch: {} | Train Loss: {:.4f} Val ACC: {:.4f}".format(*info))
+        logtxt.close()
 
     t2 = time.time()
     print("Optimization Finished!  Cost time:{:.1f} minutes".format((t2-t0)/60))
@@ -92,10 +93,12 @@ def main(args):
         net.load_state_dict(torch.load(os.path.join(best_path, best_weight[i])))
         test_acc = test(net, test_loader)
         test_acc_list.append(test_acc)
+    logtxt = open(log_path, "a")
     logtxt.write("Test ACC: {} , the best: {:4f} and the weight name: {}\n".format(
         test_acc_list, np.max(test_acc_list), best_weight[np.argmax(test_acc_list)]))
     print("The test acc:{}, the best: {} and the weight name: {}\n".format(
         test_acc_list, np.max(test_acc_list), best_weight[np.argmax(test_acc_list)]))
+    logtxt.close()
 
 
 if __name__ == '__main__':

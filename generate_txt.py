@@ -48,9 +48,9 @@ for data in class2_list[int(0.8*class2_num):]:
     test_file.write("{},{}\n".format(data_name, 0))
 
 
-train_file.close
-val_file.close
-test_file.close
+train_file.close()
+val_file.close()
+test_file.close()
 
 print("generate  finished!")
 
@@ -60,4 +60,4 @@ val_file = open(os.path.join(txtdir_path, "val.txt"), "r")
 test_file = open(os.path.join(txtdir_path, "test.txt"), "r")
 all_file = open(os.path.join(txtdir_path, "all.txt"), "w")
 all_file.writelines([train_file.readlines(), val_file.readlines(), test_file.readlines()])
-all_file.close
+all_file.close()
