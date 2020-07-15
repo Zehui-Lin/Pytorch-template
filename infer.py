@@ -5,6 +5,7 @@ import os
 import torch
 import numpy as np
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
 
 
 def test(net, loader):
@@ -18,7 +19,8 @@ def test(net, loader):
         predicts.extend(np.argmax(predict, axis=1))
         labels.extend(label)
     acc = accuracy_score(labels, predicts)
-    return acc
+    tn, fp, fn, tp = confusion_matrix(labels, predicts).ravel()
+    return acc, tn, fp, fn, tp
 
 
 name = ''
@@ -34,5 +36,10 @@ net.load_state_dict(torch.load(best_weight))
 test_set = MySet(txt_path, mode="test")
 test_loader = DataLoader(test_set, batch_size=10, num_workers=20)
 # 测试
-test_acc = test(net, test_loader)
+test_acc, tn, fp, fn, tp = test(net, test_loader)
+precision = tp/(tp+fp)
+sensitive = tp/(tp+fn)
+specificity = tn/(tn+fp)
+F1score = 2*tp/(2*tp+fp+fn)
 print("The test acc:{}".format(test_acc))
+print("The precision:{}|sensitive:{}|specificity:{}|F1score:{}".format(precision, sensitive, specificity, F1score)
