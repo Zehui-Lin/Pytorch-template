@@ -11,6 +11,7 @@ from epoch_fun import val
 from epoch_fun import test
 from utils import check_dir
 from utils import plot
+from utils import notice
 from utils import savebest_weights
 from dataset import MySet
 from network import model
@@ -112,6 +113,8 @@ def main(args):
     print("The test acc:{}, the best: {} and the weight name: {}\n".format(
         test_acc_list, np.max(test_acc_list), sensitive*100, specificity*100, precision*100, F1score*100, best_weight[np.argmax(test_acc_list)]))
     logtxt.close()
+    notice(title='实验完成！测试结果：', message="The test acc:{}, the best: {} and the weight name: {}\n".format(
+        test_acc_list, np.max(test_acc_list), sensitive*100, specificity*100, precision*100, F1score*100, best_weight[np.argmax(test_acc_list)]))
 
 
 if __name__ == '__main__':

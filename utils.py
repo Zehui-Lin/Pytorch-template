@@ -26,6 +26,7 @@ class AvgMeter(object):
         self.count += n
         self.avg = self.sum / self.count
 
+
 def numpy_to_torch(img, requires_grad=True):
     if len(img.shape) < 3:
         output = np.float32([img])
@@ -46,12 +47,14 @@ def torch_to_numpy(tensor):
     img = img.transpose((1, 2, 0))
     return img
 
+
 def check_dir(path):
     if not os.path.exists(path):
         try:
             os.mkdir(path)
         except:
             os.makedirs(path)
+
 
 def check_empty_dir(path):
     if not os.path.exists(path):
@@ -60,9 +63,10 @@ def check_empty_dir(path):
         except:
             os.makedirs(path)
     else:
-        if not os.listdir(path)==[]:
+        if not os.listdir(path) == []:
             for i in os.listdir(path):
                 os.remove(os.path.join(path, i))
+
 
 def plot(*args, x_label, y_label, title, save_path):
     '''
@@ -146,3 +150,9 @@ class savebest_weights():
                 torch.save(state, path)
             else:
                 pass
+
+
+def notice(title='', message=''):
+    url = 'https://sc.ftqq.com/SCU108285Ta987bd1a89486e43a1b50e9427dcbf6d5f28cb62ac5d5.send?'
+    params = {'text': title, "desp": message}
+    requests.post(url=url, params=params)
