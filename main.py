@@ -5,6 +5,7 @@ import random
 import argparse
 import logging
 import numpy as np
+from tqdm import trange
 from epoch_fun import train
 from epoch_fun import val
 from epoch_fun import test
@@ -58,7 +59,7 @@ def main(args):
     save = savebest_weights(args.num_model_to_save, best_path)
     t0 = time.time()
     # epoch循环
-    for epoch in range(args.num_epoch):
+    for epoch in trange(args.num_epoch):
         train_loss, train_acc = train(net, train_loader, optimizer, cost)
         val_loss, val_acc = val(net, val_loader, cost)
 

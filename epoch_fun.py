@@ -8,7 +8,7 @@ def train(net, loader, optimizer, cost):
     net.train()
     loss_meter = AvgMeter()
     labels, predicts = [], []
-    for batch_idx, (data, label) in enumerate(loader):  # 遍历
+    for batch_idx, (data, label) in tqdm(enumerate(loader)):  # 遍历
         data = data.cuda()
         label = label.cuda()
         optimizer.zero_grad()
@@ -33,7 +33,7 @@ def val(net, loader, cost):
     net.eval()
     labels, predicts = [], []
     loss_meter = AvgMeter()
-    for batch_idx, (data, label) in enumerate(loader):  # 遍历
+    for batch_idx, (data, label) in tqdm(enumerate(loader)):  # 遍历
         data = data.cuda()
         label = label.cuda()
         y = net(data)
@@ -50,7 +50,7 @@ def val(net, loader, cost):
 def test(net, loader):
     net.eval()
     labels, predicts = [], []
-    for batch_idx, (data, label) in enumerate(loader):  # 遍历
+    for batch_idx, (data, label) in tqdm(enumerate(loader)):  # 遍历
         data = data.cuda()
         y = net(data)
         predict = y.data.cpu().numpy()
