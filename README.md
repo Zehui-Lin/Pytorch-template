@@ -7,5 +7,6 @@ New Features
 * [ ] optuna
 * [x] More metrics including: sensitive|specificity|precision|F1score
 * [x] tqdm
-* [ ] Server酱
+* [x] Server酱
+* [x] Apex混合精度训练
 * [ ] python module setting
