@@ -92,13 +92,25 @@ def main(args):
     for i in range(args.num_model_to_save):
         # 模型
         net.load_state_dict(torch.load(os.path.join(best_path, best_weight[i])))
-        test_acc = test(net, test_loader)
+        test_acc, tn, fp, fn, tp = test(net, test_loader)
         test_acc_list.append(test_acc)
+        tp_list.append(tp)
+        tn_list.append(tn)
+        fp_list.append(fp)
+        fn_list.append(fn)
+    tp = tp_list[np.argmax(test_acc_list)]
+    tn = tn_list[np.argmax(test_acc_list)]
+    fp = fp_list[np.argmax(test_acc_list)]
+    fn = fn_list[np.argmax(test_acc_list)]
+    precision = tp/(tp+fp)
+    sensitive = tp/(tp+fn)
+    specificity = tn/(tn+fp)
+    F1score = 2*tp/(2*tp+fp+fn)
     logtxt = open(log_path, "a")
-    logtxt.write("Test ACC: {} , the best: {:4f} and the weight name: {}\n".format(
-        test_acc_list, np.max(test_acc_list), best_weight[np.argmax(test_acc_list)]))
+    logtxt.write("Test ACC: {} ,|sensitive:{:.2f}|specificity:{:.2f}|precision:{:.2f}|F1score:{:.2f}| the best: {:4f} and the weight name: {}\n".format(
+        test_acc_list, np.max(test_acc_list), sensitive*100, specificity*100, precision*100, F1score*100, best_weight[np.argmax(test_acc_list)]))
     print("The test acc:{}, the best: {} and the weight name: {}\n".format(
-        test_acc_list, np.max(test_acc_list), best_weight[np.argmax(test_acc_list)]))
+        test_acc_list, np.max(test_acc_list), sensitive*100, specificity*100, precision*100, F1score*100, best_weight[np.argmax(test_acc_list)]))
     logtxt.close()
 
 

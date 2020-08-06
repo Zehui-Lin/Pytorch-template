@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from utils import AvgMeter
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
 
 def train(net, loader, optimizer, cost):
     net.train()
@@ -58,6 +59,7 @@ def test(net, loader):
         predicts.extend(np.argmax(predict, axis=1))
         labels.extend(label)
     acc = accuracy_score(labels, predicts)
+    tn, fp, fn, tp = confusion_matrix(labels, predicts).ravel()
     return acc
 
 
