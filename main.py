@@ -39,8 +39,8 @@ def main(args):
     train_set = MySet(txt_path, mode="train", is_debug=args.smoke_test)
     val_set = MySet(txt_path,  mode="val", is_debug=args.smoke_test)
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
-                              num_workers=20 if not args.smoke_test else 0)
-    val_loader = DataLoader(val_set, batch_size=args.batch_size, num_workers=20 if not args.smoke_test else 0)
+                              num_workers=0 if not args.smoke_test else 0)
+    val_loader = DataLoader(val_set, batch_size=args.batch_size, num_workers=0 if not args.smoke_test else 0)
     # 定义模型
     net = model().cuda()
     # 多GPU
@@ -92,7 +92,7 @@ def main(args):
     print("Start test in best val model...")
     test_acc_list = []
     test_set = MySet(txt_path, mode="test", is_debug=args.smoke_test)
-    test_loader = DataLoader(test_set, batch_size=args.batch_size, num_workers=20 if not args.smoke_test else 0)
+    test_loader = DataLoader(test_set, batch_size=args.batch_size, num_workers=0 if not args.smoke_test else 0)
     best_weight = os.listdir(best_path)
     for i in range(args.num_model_to_save):
         # 模型

@@ -9,12 +9,42 @@ import os
 class MySet(Dataset):
     def __init__(self, txt_path, mode="train", is_debug=False):
         self.mode = mode
-        self.data_list = read_list(self.mode, txt_path, is_debug)
+        self.data_buffer = read_buffer(self.mode, txt_path, is_debug)
 
     def __getitem__(self, item):
-        data_item = self.data_list[item]
-        data_path = data_item["..."]
+        data_item = self.data_buffer[item]
+        data = data_item["image"]
         label = data_item["label"]
+
+        return data, label
+
+    def __len__(self):
+        return len(self.data_buffer)
+
+
+def read_list(mode, txt_path, is_debug=False):
+    if mode == "train":
+        txt_read_path = os.path.join(txt_path, "train.txt")
+    elif mode == "val":
+        txt_read_path = os.path.join(txt_path, "val.txt")
+    elif mode == "test":
+        txt_read_path = os.path.join(txt_path, "test.txt")
+    elif mode == "all":
+        txt_read_path = os.path.join(txt_path, "all.txt")
+    else:
+        raise ValueError
+
+    fid = open(txt_read_path, "r")
+    lines = fid.readlines()
+    if is_debug:
+        tiny_set = lines[0:int(1/10*len(lines))]
+        lines = tiny_set
+    fid.close()
+
+    data_list = []
+    for line in lines:
+        line = line.strip()  # 去除末尾的换行符
+        data_path, label = line.split(",")  # 指定空格键为分隔符
 
         # 读图
         raw_data = cv2.imread(data_path)
@@ -45,39 +75,11 @@ class MySet(Dataset):
 
         label = torch.from_numpy(np.array(label, dtype=np.int64))
 
-        return data, label
-
-    def __len__(self):
-        return len(self.data_list)
-
-
-def read_list(mode, txt_path, is_debug=False):
-    if mode == "train":
-        txt_read_path = os.path.join(txt_path, "train.txt")
-    elif mode == "val":
-        txt_read_path = os.path.join(txt_path, "val.txt")
-    elif mode == "test":
-        txt_read_path = os.path.join(txt_path, "test.txt")
-    elif mode == "all":
-        txt_read_path = os.path.join(txt_path, "all.txt")
-    else:
-        raise ValueError
-
-    fid = open(txt_read_path, "r")
-    lines = fid.readlines()
-    if is_debug:
-        tiny_set = lines[0:int(1/10*len(lines))]
-        lines = tiny_set
-    fid.close()
-
-    data_list = []
-    for line in lines:
-        line = line.strip()  # 去除末尾的换行符
-        data_path, label = line.split(",")  # 指定空格键为分隔符
-        image_info = {
-            "...": data_path,
+        image_buffer = {
+            "image": data,
             "label": int(label)
         }
-        data_list.append(image_info)
 
-    return data_list
+        data_buffer.append(image_buffer)
+
+    return data_buffer
