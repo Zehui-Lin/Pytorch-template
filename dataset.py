@@ -22,7 +22,7 @@ class MySet(Dataset):
         return len(self.data_buffer)
 
 
-def read_list(mode, txt_path, is_debug=False):
+def read_buffer(mode, txt_path, is_debug=False):
     if mode == "train":
         txt_read_path = os.path.join(txt_path, "train.txt")
     elif mode == "val":
@@ -41,7 +41,7 @@ def read_list(mode, txt_path, is_debug=False):
         lines = tiny_set
     fid.close()
 
-    data_list = []
+    data_buffer = []
     for line in lines:
         line = line.strip()  # 去除末尾的换行符
         data_path, label = line.split(",")  # 指定空格键为分隔符
@@ -64,7 +64,7 @@ def read_list(mode, txt_path, is_debug=False):
             )], random_order=True)
         seq_same = seq.to_deterministic()
 
-        if self.mode == "train":
+        if mode == "train":
             # cv2.imwrite('./data/original'+str(item)+'.png', raw_data)  # 保存原图
             processed_data = seq_same(image=raw_data)
             # cv2.imwrite('./data/augmentation'+str(item)+'.png', processed_data)  # 观察增强效果
@@ -77,7 +77,7 @@ def read_list(mode, txt_path, is_debug=False):
 
         image_buffer = {
             "image": data,
-            "label": int(label)
+            "label": label
         }
 
         data_buffer.append(image_buffer)
