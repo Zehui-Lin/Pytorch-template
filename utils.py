@@ -2,6 +2,7 @@ import os
 import numpy as np
 from matplotlib import pyplot as plt
 import torch
+import requests
 
 
 class AvgMeter(object):
