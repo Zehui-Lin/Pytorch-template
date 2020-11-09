@@ -61,7 +61,7 @@ def test(net, loader):
         labels.extend(label)
     acc = accuracy_score(labels, predicts)
     tn, fp, fn, tp = confusion_matrix(labels, predicts).ravel()
-    return acc
+    return acc, tn, fp, fn, tp
 
 
 
