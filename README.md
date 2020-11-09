@@ -10,3 +10,4 @@ New Features
 * [x] Server酱
 * [x] Apex混合精度训练
 * [ ] python module setting
+* [x] Remove Apex混合精度训练

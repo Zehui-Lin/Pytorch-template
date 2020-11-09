@@ -6,7 +6,6 @@ import argparse
 import logging
 import numpy as np
 from tqdm import trange
-from apex import amp 
 from epoch_fun import train
 from epoch_fun import val
 from epoch_fun import test
@@ -55,9 +54,6 @@ def main(args):
         optimizer = torch.optim.Adam(net.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     if args.optimizer == "SGD":
         optimizer = torch.optim.SGD(net.parameters(), lr=args.lr, weight_decay=args.weight_decay)
-
-    # 混合精度训练
-    net, optimizer = amp.initialize(net, optimizer, opt_level= "O1")
 
     # 训练结果记录
     train_loss_list, train_acc_list, val_loss_list, val_acc_list = [], [], [], []

@@ -17,8 +17,7 @@ def train(net, loader, optimizer, cost):
         y = net(data)
         loss = cost(y, label)
         loss_meter.update(loss.item())
-        with amp.scale_loss(loss, optimizer) as scaled_loss:
-            scaled_loss.backward()
+        loss.backward()
         optimizer.step()
         # 计算acc
         predict = y.data.cpu().numpy()
