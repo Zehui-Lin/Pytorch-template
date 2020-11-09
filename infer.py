@@ -34,7 +34,7 @@ net = model().cuda()
 net.load_state_dict(torch.load(best_weight))
 # 数据
 test_set = MySet(txt_path, mode="test")
-test_loader = DataLoader(test_set, batch_size=10, num_workers=20)
+test_loader = DataLoader(test_set, batch_size=10, num_workers=0)
 # 测试
 test_acc, tn, fp, fn, tp = test(net, test_loader)
 precision = tp/(tp+fp)

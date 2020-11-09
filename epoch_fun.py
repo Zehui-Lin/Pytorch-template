@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
+from tqdm import tqdm`
 from utils import AvgMeter
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
