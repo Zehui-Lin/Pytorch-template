@@ -12,9 +12,33 @@ class MySet(Dataset):
         self.data_buffer = read_buffer(self.mode, txt_path, is_debug)
 
     def __getitem__(self, item):
+        # 数据增强应该放在这里，放在init的函数中没有太大意义，只增强一次
         data_item = self.data_buffer[item]
-        data = data_item["image"]
+        raw_data = data_item["image"]
         label = data_item["label"]
+        seq = iaa.Sequential([
+            iaa.Fliplr(0.5),
+            iaa.Crop(percent=(0, 0.1)),
+            iaa.Sometimes(0.5, iaa.GaussianBlur(sigma=(0, 0.5))),
+            iaa.Sometimes(0.5, iaa.GammaContrast((0.6, 1.67))),
+            iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05*255)),
+            iaa.Multiply((0.8, 1.2), per_channel=0.2),
+            iaa.Affine(
+                scale={"x": (0.8, 1.2), "y": (0.8, 1.2)},
+                translate_percent={"x": (-0.2, 0.2), "y": (-0.2, 0.2)},
+                rotate=(-25, 25),
+                shear=(-8, 8)
+            )], random_order=True)
+        seq_same = seq.to_deterministic()
+
+        if mode == "train":
+            # cv2.imwrite('./data/original'+str(item)+'.png', raw_data)  # 保存原图
+            processed_data = seq_same(image=raw_data)
+            # cv2.imwrite('./data/augmentation'+str(item)+'.png', processed_data)  # 观察增强效果
+        else:
+            processed_data = raw_data
+
+        data = torch.from_numpy(processed_data.transpose((2, 0, 1)).astype(np.float32)/255)
 
         return data, label
 
@@ -48,35 +72,11 @@ def read_buffer(mode, txt_path, is_debug=False):
 
         # 读图
         raw_data = cv2.imread(data_path)
-        # raw_data = cv2.resize(raw_data, (W, H))
-        seq = iaa.Sequential([
-            iaa.Fliplr(0.5),
-            iaa.Crop(percent=(0, 0.1)),
-            iaa.Sometimes(0.5, iaa.GaussianBlur(sigma=(0, 0.5))),
-            iaa.Sometimes(0.5, iaa.GammaContrast((0.6, 1.67))),
-            iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05*255)),
-            iaa.Multiply((0.8, 1.2), per_channel=0.2),
-            iaa.Affine(
-                scale={"x": (0.8, 1.2), "y": (0.8, 1.2)},
-                translate_percent={"x": (-0.2, 0.2), "y": (-0.2, 0.2)},
-                rotate=(-25, 25),
-                shear=(-8, 8)
-            )], random_order=True)
-        seq_same = seq.to_deterministic()
-
-        if mode == "train":
-            # cv2.imwrite('./data/original'+str(item)+'.png', raw_data)  # 保存原图
-            processed_data = seq_same(image=raw_data)
-            # cv2.imwrite('./data/augmentation'+str(item)+'.png', processed_data)  # 观察增强效果
-        else:
-            processed_data = raw_data
-
-        data = torch.from_numpy(processed_data.transpose((2, 0, 1)).astype(np.float32)/255)
 
         label = torch.from_numpy(np.array(label, dtype=np.int64))
 
         image_buffer = {
-            "image": data,
+            "image": raw_data,
             "label": label
         }
 
