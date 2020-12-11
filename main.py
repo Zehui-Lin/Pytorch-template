@@ -109,12 +109,12 @@ def main(args):
     specificity = tn/(tn+fp)
     F1score = 2*tp/(2*tp+fp+fn)
     logtxt = open(log_path, "a")
-    logtxt.write("Test ACC: {} ,|sensitive:{:.2f}|specificity:{:.2f}|precision:{:.2f}|F1score:{:.2f}| the best: {:4f} and the weight name: {}\n".format(
+    logtxt.write("Test ACC: {}, the best: {:2f}|sensitive:{:.2f}|specificity:{:.2f}|precision:{:.2f}|F1score:{:.2f}| and the weight name: {}\n".format(
         test_acc_list, np.max(test_acc_list), sensitive*100, specificity*100, precision*100, F1score*100, best_weight[np.argmax(test_acc_list)]))
-    print("The test acc:{}, the best: {} and the weight name: {}\n".format(
+    print("Test ACC: {}, the best: {:2f}|sensitive:{:.2f}|specificity:{:.2f}|precision:{:.2f}|F1score:{:.2f}| and the weight name: {}\n".format(
         test_acc_list, np.max(test_acc_list), sensitive*100, specificity*100, precision*100, F1score*100, best_weight[np.argmax(test_acc_list)]))
     logtxt.close()
-    notice(title='实验完成！测试结果：', message="The test acc:{}, the best: {} and the weight name: {}\n".format(
+    notice(title='实验完成！测试结果：', message="Test ACC: {}, the best: {:2f}|sensitive:{:.2f}|specificity:{:.2f}|precision:{:.2f}|F1score:{:.2f}| and the weight name: {}\n".format(
         test_acc_list, np.max(test_acc_list), sensitive*100, specificity*100, precision*100, F1score*100, best_weight[np.argmax(test_acc_list)]))
 
 

@@ -26,7 +26,7 @@ def train(net, loader, optimizer, cost):
         labels.extend(label)
         if batch_idx % 10 == 0:
             info = [batch_idx, loss_meter.val]
-            print("\rBatch: {} Loss: {:.4f}".format(*info), end="")
+            print("\nBatch: {} Loss: {:.4f}".format(*info), end="")
     acc = accuracy_score(labels, predicts)
     return loss_meter.avg, acc
 

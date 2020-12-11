@@ -19,22 +19,14 @@ class MySet(Dataset):
         seq = iaa.Sequential([
             iaa.Fliplr(0.5),
             iaa.Crop(percent=(0, 0.1)),
-            iaa.Sometimes(0.5, iaa.GaussianBlur(sigma=(0, 0.5))),
-            iaa.Sometimes(0.5, iaa.GammaContrast((0.6, 1.67))),
-            iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05*255)),
-            iaa.Multiply((0.8, 1.2), per_channel=0.2),
-            iaa.Affine(
-                scale={"x": (0.8, 1.2), "y": (0.8, 1.2)},
-                translate_percent={"x": (-0.2, 0.2), "y": (-0.2, 0.2)},
-                rotate=(-25, 25),
-                shear=(-8, 8)
-            )], random_order=True)
+            iaa.Multiply((0.8, 1.2))],
+            random_order=True)
         seq_same = seq.to_deterministic()
 
-        if mode == "train":
-            # cv2.imwrite('./data/original'+str(item)+'.png', raw_data)  # 保存原图
+        if self.mode == "train":
+            # cv2.imwrite('./data/original/'+str(item)+'.png', raw_data)  # 保存原图
             processed_data = seq_same(image=raw_data)
-            # cv2.imwrite('./data/augmentation'+str(item)+'.png', processed_data)  # 观察增强效果
+            # cv2.imwrite('./data/augmentation/'+str(item)+'.png', processed_data)  # 观察增强效果
         else:
             processed_data = raw_data
 
@@ -66,7 +58,7 @@ def read_buffer(mode, txt_path, is_debug=False):
     fid.close()
 
     data_buffer = []
-    for line in lines:
+    for line in tqdm(lines, desc="正在读入"+mode+"数据"):
         line = line.strip()  # 去除末尾的换行符
         data_path, label = line.split(",")  # 指定空格键为分隔符
 
