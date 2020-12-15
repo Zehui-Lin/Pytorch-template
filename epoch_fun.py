@@ -6,27 +6,27 @@ from utils import AvgMeter
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 
+
 def train(net, loader, optimizer, cost):
     net.train()
     loss_meter = AvgMeter()
     labels, predicts = [], []
-    for batch_idx, (data, label) in tqdm(enumerate(loader)):  # 遍历
-        data = data.cuda()
-        label = label.cuda()
-        optimizer.zero_grad()
-        y = net(data)
-        loss = cost(y, label)
-        loss_meter.update(loss.item())
-        loss.backward()
-        optimizer.step()
-        # 计算acc
-        predict = y.data.cpu().numpy()
-        label = label.data.cpu().numpy()
-        predicts.extend(np.argmax(predict, axis=1))
-        labels.extend(label)
-        if batch_idx % 10 == 0:
-            info = [batch_idx, loss_meter.val]
-            print("\nBatch: {} Loss: {:.4f}".format(*info), end="")
+    with tqdm(total=len(loader)) as pbar:
+        for batch_idx, (data, label) in tqdm(enumerate(loader)):  # 遍历
+            data = data.cuda()
+            label = label.cuda()
+            optimizer.zero_grad()
+            y = net(data)
+            loss = cost(y, label)
+            loss_meter.update(loss.item())
+            loss.backward()
+            optimizer.step()
+            # 计算acc
+            predict = y.data.cpu().numpy()
+            label = label.data.cpu().numpy()
+            predicts.extend(np.argmax(predict, axis=1))
+            labels.extend(label)
+            pbar.update(1)
     acc = accuracy_score(labels, predicts)
     return loss_meter.avg, acc
 
@@ -62,6 +62,3 @@ def test(net, loader):
     acc = accuracy_score(labels, predicts)
     tn, fp, fn, tp = confusion_matrix(labels, predicts).ravel()
     return acc, tn, fp, fn, tp
-
-
-
