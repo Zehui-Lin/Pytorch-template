@@ -12,7 +12,6 @@ class MySet(Dataset):
         self.data_buffer = read_buffer(self.mode, txt_path, is_debug)
 
     def __getitem__(self, item):
-        # 数据增强应该放在这里，放在init的函数中没有太大意义，只增强一次
         data_item = self.data_buffer[item]
         raw_data = data_item["image"]
         label = data_item["label"]
@@ -59,8 +58,8 @@ def read_buffer(mode, txt_path, is_debug=False):
 
     data_buffer = []
     for line in tqdm(lines, desc="正在读入"+mode+"数据"):
-        line = line.strip()  # 去除末尾的换行符
-        data_path, label = line.split(",")  # 指定空格键为分隔符
+        line = line.strip()
+        data_path, label = line.split(",")  # 指定为分隔符
 
         # 读图
         raw_data = cv2.imread(data_path)

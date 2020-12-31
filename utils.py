@@ -154,6 +154,6 @@ class savebest_weights():
 
 
 def notice(title='', message=''):
-    url = 'https://sc.ftqq.com/SCU108285Ta987bd1a89486e43a1b50e9427dcbf6d5f28cb62ac5d5.send?'
+    url = '' # 添加server酱链接
     params = {'text': title, "desp": message}
     requests.post(url=url, params=params)

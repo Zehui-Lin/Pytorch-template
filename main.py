@@ -120,12 +120,10 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    # 几乎每次需要改动的
     parser.add_argument('--name', type=str, help="folder name, must declare")
     parser.add_argument('--gpu_id', type=str, default='0')
     parser.add_argument('--smoke_test', action='store_true', help="finish fast to test")
     parser.add_argument('--cv_index', choices=('1', '2', '3', '4', ''), default='')
-    # 不要轻易改动的
     parser.add_argument('--num_epoch', type=int, default=50)
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--optimizer', type=str, choices=('Adam', 'SGD'), default='Adam')
