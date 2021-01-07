@@ -1,13 +1,12 @@
-# pytorch-template
+# A Pytorch template for deep learning experiments.
 
-pytorch template for deep learning experiments
-
-New Features
+## New Features
 * [ ] jitlog
 * [ ] optuna
+* [x] exponential moving averages
 * [x] More metrics including: sensitive|specificity|precision|F1score
 * [x] tqdm
-* [x] Server酱
-* [x] Apex混合精度训练
-* [ ] python module setting
-* [x] Remove Apex混合精度训练
+* [x] ServerChan
+* [x] Apex mix precision training
+
+If you run into issues or have suggestions for improvement, feel free to open either a new issue or pull request.

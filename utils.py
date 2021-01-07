@@ -71,7 +71,7 @@ def check_empty_dir(path):
 
 def plot(*args, x_label, y_label, title, save_path):
     '''
-    输入数据格式：数据1、图例名1, 数据2、图例名2,......
+    Input format: data1, name1, data2, name2...
     '''
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -112,8 +112,6 @@ def weight_init(module):
 class savebest_weights():
     def __init__(self, num, weight_path):
         super(savebest_weights, self).__init__()
-        #  num  表示要保存的模型数量
-        #  weight_path表示存储路径
         self.weight_path = weight_path
         self.num = num
         self.acc_list = []
@@ -122,38 +120,41 @@ class savebest_weights():
         check_empty_dir(self.weight_path)
 
     def remove(self, file_path):
-        if os.path.exists(file_path):  # 如果文件存在
+        if os.path.exists(file_path):
             os.remove(file_path)
         else:
             pass
 
-    def save_weight(self, net, acc, epoch):
+    def save_weight(self, net, acc, epoch, ema):
         path = os.path.join(self.weight_path, "Network_{}_{:.4f}.pth.gz".format(epoch, acc))
 
-        if len(self.acc_list) < self.num:  # 如果保存模型数量小于预设值，继续保存
+        if len(self.acc_list) < self.num:
             self.acc_list.append(acc)
             self.path_list.append(path)
+            if ema is not None:
+                ema.copy_to(model.parameters())
             state = net.state_dict()
             torch.save(state, path)
-        else:  # 如果大于等于预设值，按acc大小排序
+        else:
             self.acc_array = np.array(self.acc_list)
             self.index = np.argsort(-self.acc_array, axis=0)
             self.index = self.index[:self.num]
             self.acc = self.acc_array[self.index]
 
-            if acc >= self.acc[-1]:  # 如果新的acc大于之前的最小值，则保存模型，同时删除acc最小的那个模型
+            if acc >= self.acc[-1]:
                 self.remove(self.path_list[self.index[-1]])
                 del self.acc_list[self.index[-1]]
                 del self.path_list[self.index[-1]]
                 self.acc_list.append(acc)
                 self.path_list.append(path)
+                if ema is not None:
+                    ema.copy_to(model.parameters())
                 state = net.state_dict()
                 torch.save(state, path)
             else:
                 pass
 
 
-def notice(title='', message=''):
-    url = '' # 添加server酱链接
+def notice(url, title='', message=''):
     params = {'text': title, "desp": message}
     requests.post(url=url, params=params)

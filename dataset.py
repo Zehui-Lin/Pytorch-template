@@ -23,9 +23,9 @@ class MySet(Dataset):
         seq_same = seq.to_deterministic()
 
         if self.mode == "train":
-            # cv2.imwrite('./data/original/'+str(item)+'.png', raw_data)  # 保存原图
+            # cv2.imwrite('./data/original/'+str(item)+'.png', raw_data)  # save original image
             processed_data = seq_same(image=raw_data)
-            # cv2.imwrite('./data/augmentation/'+str(item)+'.png', processed_data)  # 观察增强效果
+            # cv2.imwrite('./data/augmentation/'+str(item)+'.png', processed_data)  # visualize the augmentation effect
         else:
             processed_data = raw_data
 
@@ -57,11 +57,10 @@ def read_buffer(mode, txt_path, is_debug=False):
     fid.close()
 
     data_buffer = []
-    for line in tqdm(lines, desc="正在读入"+mode+"数据"):
+    for line in tqdm(lines, desc="Loading: "+mode+" data"):
         line = line.strip()
-        data_path, label = line.split(",")  # 指定为分隔符
+        data_path, label = line.split(",") 
 
-        # 读图
         raw_data = cv2.imread(data_path)
 
         label = torch.from_numpy(np.array(label, dtype=np.int64))

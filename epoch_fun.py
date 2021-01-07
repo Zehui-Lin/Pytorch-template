@@ -1,26 +1,34 @@
 import numpy as np
 import torch
 import torch.nn as nn
+from apex import amp
 from tqdm import tqdm
 from utils import AvgMeter
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
+from torch_ema import ExponentialMovingAverage
 
 
-def train(net, loader, optimizer, cost):
+def train(net, loader, optimizer, cost, apex_training, ema):
     net.train()
     loss_meter = AvgMeter()
     labels, predicts = [], []
     with tqdm(total=len(loader)) as pbar:
-        for batch_idx, (data, label) in tqdm(enumerate(loader)):  # 遍历
+        for batch_idx, (data, label) in tqdm(enumerate(loader)):
             data = data.cuda()
             label = label.cuda()
             optimizer.zero_grad()
             y = net(data)
             loss = cost(y, label)
             loss_meter.update(loss.item())
-            loss.backward()
+            if apex_training:
+                with amp.scale_loss(loss, optimizer) as scaled_loss:
+                    scaled_loss.backward()
+            else:
+                loss.backward()
             optimizer.step()
+            if ema is not None:
+                ema.update(model.parameters())
             # 计算acc
             predict = y.data.cpu().numpy()
             label = label.data.cpu().numpy()
@@ -35,7 +43,7 @@ def val(net, loader, cost):
     net.eval()
     labels, predicts = [], []
     loss_meter = AvgMeter()
-    for batch_idx, (data, label) in tqdm(enumerate(loader)):  # 遍历
+    for batch_idx, (data, label) in tqdm(enumerate(loader)):
         data = data.cuda()
         label = label.cuda()
         y = net(data)
@@ -52,7 +60,7 @@ def val(net, loader, cost):
 def test(net, loader):
     net.eval()
     labels, predicts = [], []
-    for batch_idx, (data, label) in tqdm(enumerate(loader)):  # 遍历
+    for batch_idx, (data, label) in tqdm(enumerate(loader)):
         data = data.cuda()
         y = net(data)
         predict = y.data.cpu().numpy()
