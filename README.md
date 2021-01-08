@@ -1,7 +1,7 @@
 # A Pytorch template for deep learning experiments.
 
 ## New Features
-* [ ] jitlog
+* [ ] fitlog
 * [ ] optuna
 * [x] exponential moving averages
 * [x] More metrics including: sensitive|specificity|precision|F1score
