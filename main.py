@@ -124,7 +124,7 @@ def main(args):
     print("Test ACC: {}, the best: {:2f}|sensitive:{:.2f}|specificity:{:.2f}|precision:{:.2f}|F1score:{:.2f}| and the weight name: {}\n".format(
         test_acc_list, np.max(test_acc_list), sensitive*100, specificity*100, precision*100, F1score*100, best_weight[np.argmax(test_acc_list)]))
     logtxt.close()
-    if args.ServerChan_link != '':
+    if args.ServerChan_link is not None:
         notice(args.ServerChan_link, title='Finish！Result：', message="Test ACC: {}, the best: {:2f}|sensitive:{:.2f}|specificity:{:.2f}|precision:{:.2f}|F1score:{:.2f}| and the weight name: {}\n".format(
             test_acc_list, np.max(test_acc_list), sensitive*100, specificity*100, precision*100, F1score*100, best_weight[np.argmax(test_acc_list)]))
 
