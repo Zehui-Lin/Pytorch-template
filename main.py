@@ -101,7 +101,7 @@ def main(args):
     test_loader = DataLoader(test_set, batch_size=args.batch_size, num_workers=0 if not args.smoke_test else 0)
     best_weight = os.listdir(best_path)
     tp_list, tn_list, fp_list, fn_list = [], [], [], []
-    for i in range(args.num_model_to_save):
+    for i in range(len(best_weight)):
         # Model
         net.load_state_dict(torch.load(os.path.join(best_path, best_weight[i])))
         test_acc, tn, fp, fn, tp = test(net, test_loader)
