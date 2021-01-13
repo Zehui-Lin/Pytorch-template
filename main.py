@@ -87,10 +87,10 @@ def main(args):
         plot(train_acc_list, 'train_acc', val_acc_list, 'val_acc',
              x_label="epoch", y_label="acc", title="Acc Curve-epoch", save_path=result_path)
 
-        info = [str(epoch).zfill(3), train_loss, val_acc]
+        info = [time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), str(epoch).zfill(3), train_loss, val_acc]
         logtxt = open(log_path, "a")
-        logtxt.write("Epoch: {} | Train Loss: {:.4f} Val ACC: {:.4f}\n".format(*info))
-        print("\rEpoch: {} | Train Loss: {:.4f} Val ACC: {:.4f}".format(*info))
+        logtxt.write("Time: {} | Epoch: {} | Train Loss: {:.4f} Val ACC: {:.4f}\n".format(*info))
+        print("\rTime: {} | Epoch: {} | Train Loss: {:.4f} Val ACC: {:.4f}".format(*info))
         logtxt.close()
 
     t2 = time.time()
