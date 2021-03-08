@@ -1,6 +1,14 @@
+'''
+Author: Zehui Lin
+Date: 2021-01-22 17:20:36
+LastEditTime: 2021-03-08 12:16:14
+LastEditors: Zehui Lin
+Description: 
+'''
 import os
 import cv2
 import torch
+import random
 import numpy as np
 from tqdm import tqdm
 from imgaug import augmenters as iaa
@@ -52,6 +60,7 @@ def read_buffer(mode, txt_path, is_debug=False):
 
     fid = open(txt_read_path, "r")
     lines = fid.readlines()
+    random.shuffle(lines) # avoid all same label in smoke test
     if is_debug:
         tiny_set = lines[0:int(1/10*len(lines))]
         lines = tiny_set
