@@ -69,7 +69,7 @@ def check_empty_dir(path):
                 os.remove(os.path.join(path, i))
 
 
-def plot(*args, x_label, y_label, title, save_path):
+def plot(*args, x_label, y_label, title, save_path, save_plot_data=False):
     '''
     Input format: data1, name1, data2, name2...
     '''
@@ -85,6 +85,11 @@ def plot(*args, x_label, y_label, title, save_path):
     plt.legend()
     plt.savefig(os.path.join(save_path, "{}.png".format(title)))
     plt.close()
+    if save_plot_data:
+        with open(os.path.join(save_path, "{}.txt".format(title)), "w") as f:
+            for i in range(len(args)//2):
+                f.write(str(args[2*i]))
+                f.write("\n")
 
 
 def weight_init(module):
